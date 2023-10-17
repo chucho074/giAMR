@@ -20,6 +20,8 @@
 #include <d3d11.h>
 //Own includes
 #include "giPrerequisitesAMR.h"
+#include "giTexture.h"
+
 
 using namespace giAMRSDK;
 
@@ -113,9 +115,17 @@ class App final
   void
   checkoutSetup();
 
+  /**
+   * @brief      In charge to render the window for the process of the tool.
+   */
+  void
+  renderAMRprocess();
 
  private:
-
+  
+  Texture
+  textureFromPath(Path inPath);
+  
    /**
     * @brief	   Method that set the events and messages for the game.
     * @param	   inHw          The HWND

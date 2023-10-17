@@ -12,6 +12,8 @@
 #pragma once
 #include "giPrerequisitesAMR.h"
 
+#include <d3d11.h>
+
 namespace giAMRSDK {
 
   namespace TEXTURE_TYPE {
@@ -46,5 +48,6 @@ namespace giAMRSDK {
     //The path of the file.
     Path m_path;
 
+    ID3D11Texture2D* m_texture = nullptr;
   };
 }
