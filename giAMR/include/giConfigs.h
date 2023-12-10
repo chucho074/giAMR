@@ -29,7 +29,6 @@ class Configs : public Module<Configs>
 
 
   static Path s_generatedPath;
-  static Path s_outPath;
   
 };
 

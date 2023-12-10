@@ -96,10 +96,10 @@ namespace giAMRSDK {
     float
     dotProd(const Vector3& inVect);
     
-    float
+    Vector3
     crossProd(const Vector3& inVect);
     
-    void
+    Vector3
     normalize();
     
     float

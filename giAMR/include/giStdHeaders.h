@@ -173,6 +173,10 @@ namespace giAMRSDK {
 
   using Path = std::filesystem::path;
 
+  using std::filesystem::current_path;
+
+  using std::filesystem::exists;
+
   //Wstring & String converters functions
  /* String
   to_string(wString wstr) {

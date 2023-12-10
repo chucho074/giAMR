@@ -13,11 +13,9 @@
 
 namespace giAMRSDK {
   Mesh::Mesh(Vector<SimpleVertex> inVertex, 
-             Vector<uint32> inIndex, 
-             Vector<Texture> inTextures) {
+             Vector<uint32> inIndex) {
     m_vertexVector = inVertex;
     m_facesList = inIndex;
-    m_textures = inTextures;
 
   }
   
@@ -28,7 +26,6 @@ namespace giAMRSDK {
   void 
   Mesh::destroy() {
     m_facesList.clear();
-    m_textures.clear();
     m_vertexVector.clear();
   }
 

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\ImGUI">
+      <UniqueIdentifier>{ddcb5b16-5f5f-4fb2-81f5-fe26c9cfecd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Source.cpp">
@@ -39,76 +42,76 @@
     <ClCompile Include="src\giVector3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\ImGui\imgui.cpp">
+      <Filter>Source Files\ImGUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\ImGui\imgui_demo.cpp">
+      <Filter>Source Files\ImGUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\ImGui\imgui_draw.cpp">
+      <Filter>Source Files\ImGUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui_tables.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\ImGui\imgui_impl_dx11.cpp">
+      <Filter>Source Files\ImGUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\ImGui\imgui_impl_win32.cpp">
+      <Filter>Source Files\ImGUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui_impl_dx11.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\ImGui\imgui_tables.cpp">
+      <Filter>Source Files\ImGUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\imgui_impl_win32.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\ImGui\imgui_widgets.cpp">
+      <Filter>Source Files\ImGUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\giModel.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giExporter.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\giAMR.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giImporter.h">
-      <Filter>Resource Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giApp.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giPlatformTypes.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giMesh.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giStdHeaders.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giVector3.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giVector2.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giPrerequisitesAMR.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giTexture.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\giModule.h">
-      <Filter>Resource Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\giConfigs.h">
-      <Filter>Resource Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\imgui_impl_dx11.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\giExporter.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\imgui_impl_win32.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\giImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giPlatformTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giPrerequisitesAMR.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giStdHeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giVector2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\giVector3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui\imgui_impl_dx11.h">
+      <Filter>Source Files\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui\imgui_impl_win32.h">
+      <Filter>Source Files\ImGUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

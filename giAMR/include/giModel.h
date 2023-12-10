@@ -12,6 +12,12 @@
 #pragma once
 #include "giPrerequisitesAMR.h"
 #include "giMesh.h"
+#include <array>
+#include <vector>
+#include <ranges>
+#include <algorithm>
+#include <unordered_map>
+
 
 namespace giAMRSDK {
 
@@ -25,7 +31,7 @@ namespace giAMRSDK {
     uint32 totalIndex = 0;
   };
   
-  class Model final
+  class Model 
   {
    public:
   	Model() = default;
@@ -36,4 +42,6 @@ namespace giAMRSDK {
 
     Path m_path;
   };
+
+ 
 }

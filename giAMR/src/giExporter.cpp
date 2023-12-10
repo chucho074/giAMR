@@ -44,7 +44,7 @@ namespace giAMRSDK {
       //Smooth shading
       tmpOut += "s off\n";
 
-      tmpOut += "g "+ inPath.stem().string()+ "_subd:polyToSubd1\n";
+      tmpOut += "g "+ inPath.stem().string()+ "_subd:polyToSubd1" + "\n";
 
       //Usemtl
       tmpOut += "usemtl mat"+ toString(matID) + "\n";
@@ -63,21 +63,29 @@ namespace giAMRSDK {
       tmpOut += faces;
     }
    
+    
+    //Write files
+    ofstream fout(inPath.string());
+    fout << tmpOut;
+
+    ExportMtl(inPath);
+  }
+
+  void 
+  Exporter::ExportMtl(Path inPath) {
+    String tmpOutMtl;
+
     //Material data
     tmpOutMtl += "newmtl mat0\n";
     tmpOutMtl += "illum 4\n";
 
-    tmpOutMtl += ("Kd "+ toString(1.00)+ " "+ toString(1.00)+ " "+ toString(1.00)+"\n");
-    tmpOutMtl += ("Ks "+ toString(0.90)+ " "+ toString(0.90)+ " "+ toString(0.90)+"\n");
-    tmpOutMtl += ("Ka "+ toString(1.00)+ " "+ toString(1.00)+ " "+ toString(1.00)+"\n");
-    tmpOutMtl += ("Tf "+ toString(1.00)+ " "+ toString(1.00)+ " "+ toString(1.00)+"\n");
-    tmpOutMtl += ("Ni "+ toString(1.00)+"\n");
-    
+    tmpOutMtl += ("Kd " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
+    tmpOutMtl += ("Ks " + toString(0.90) + " " + toString(0.90) + " " + toString(0.90) + "\n");
+    tmpOutMtl += ("Ka " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
+    tmpOutMtl += ("Tf " + toString(1.00) + " " + toString(1.00) + " " + toString(1.00) + "\n");
+    tmpOutMtl += ("Ni " + toString(1.00) + "\n");
 
-    //Write files
-    ofstream fout(inPath.string());
-    fout << tmpOut;
-    
+
     Path tmpMtlPath = inPath;
     tmpMtlPath.replace_extension(".mtl");
 

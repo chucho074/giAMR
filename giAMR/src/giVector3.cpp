@@ -190,27 +190,30 @@ namespace giAMRSDK {
     return ((x * inVect.x) + (y * inVect.y)+ (z * inVect.z));
   }
   
-  float
+  Vector3
   Vector3::crossProd(const Vector3& inVect) {
-    return (((y * inVect.z) - (z * inVect.y)),
+    return {((y * inVect.z) - (z * inVect.y)),
             ((z * inVect.x) - (x * inVect.z)),
-            ((x * inVect.y) - (y * inVect.z)));
+            ((x * inVect.y) - (y * inVect.z))};
   }
   
-  void
+  Vector3
   Vector3::normalize() {
+    Vector3 tmpOut;
     float mag = magnitude();
     if (mag > 0) {
       float tmp = 1.0f / mag;
-      x *= tmp;
-      y *= tmp;
-      z *= tmp;
+      tmpOut.x *= tmp;
+      tmpOut.y *= tmp;
+      tmpOut.z *= tmp;
     }
     else {
-      x = 0.0f;
-      y = 0.0f;
-      z = 0.0f;
+      tmpOut.x = 0.0f;
+      tmpOut.y = 0.0f;
+      tmpOut.z = 0.0f;
     }
+
+    return tmpOut;
   }
   
   float

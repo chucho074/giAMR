@@ -1,6 +1,6 @@
 #include "giApp.h"
-int32
+int
 main() {
-  App tmpApp;
+  giAMRSDK::App tmpApp;
   return tmpApp.run();
 }

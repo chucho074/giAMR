@@ -13,6 +13,8 @@
 #include "giPrerequisitesAMR.h"
 #include "giModel.h"
 #include "giModule.h"
+#include "giConfigs.h"
+#include "giTexture.h"
 
 namespace giAMRSDK {
   struct DescAMR {
@@ -36,7 +38,7 @@ namespace giAMRSDK {
 
     Path m_refMesh;
 
-    Path m_baseMesh = "G:/Dev/giEngine/bin/Resources/Models/Generated/sphere.obj";
+    Path m_baseMesh = g_Configs().s_generatedPath.string() + "sphere.obj";
   };
 
   /**
@@ -86,8 +88,6 @@ namespace giAMRSDK {
 
 
    public:
-    bool m_renderWindow = false;
-
     bool m_processWindow = false;
 
     int32 m_processImg = 0;
@@ -100,14 +100,14 @@ namespace giAMRSDK {
     
     ModelInfo m_outInfo;
 
-    uint32 minimunTriang = 512;
+    uint32 minimunTriang = 25;
     uint32 halfTriang = 512;
     uint32 partialTriang = 512;
 
     int32 finalTriang = 0;
 
     //giAMR process image
-    Vector<Texture> m_AMRprocess;
+    Vector<SharedPtr<Texture>> m_AMRprocess;
 
   };
 

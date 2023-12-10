@@ -48,6 +48,8 @@ namespace giAMRSDK {
     //The path of the file.
     Path m_path;
 
+    //DX variables.
     ID3D11Texture2D* m_texture = nullptr;
+    ID3D11ShaderResourceView* m_subResourceData = nullptr;
   };
 }

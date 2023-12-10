@@ -24,6 +24,9 @@ namespace giAMRSDK {
 
     static void
     ExportObj(Path inPath, SharedPtr<Model> inModel);
+    
+    static void
+    ExportMtl(Path inPath);
 
 
   };

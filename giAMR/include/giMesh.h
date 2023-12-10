@@ -38,8 +38,7 @@ namespace giAMRSDK {
       * @param    inTextures    .
       */
     Mesh(Vector<SimpleVertex> inVertex,
-         Vector<uint32> inIndex,
-         Vector<Texture> inTextures);
+         Vector<uint32> inIndex);
 
   	~Mesh();
 
@@ -51,9 +50,6 @@ namespace giAMRSDK {
 
     //The list of Faces / Index data
     Vector<uint32> m_facesList;
-
-    //Textures in the mesh
-    Vector<Texture> m_textures;
 
     //Name of the mesh.
     String m_name;

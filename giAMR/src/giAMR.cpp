@@ -17,10 +17,9 @@ namespace giAMRSDK {
   void 
   AMR::setRefMesh(Path inData) {
     m_savedData.m_refMesh = inData;
-    String tmpPath = Configs::s_outPath.string()
+    String tmpPath = Configs::s_generatedPath.string()
                        + inData.filename().string();
     m_savedData.m_outputDir = tmpPath;
-    m_renderWindow = true;
   }
 
   void 
@@ -38,9 +37,11 @@ namespace giAMRSDK {
 
   void
   AMR::createJSON() {
+    auto & configs = g_Configs();
     json tmpFile;
 
-    tmpFile["base_mesh"] = m_savedData.m_baseMesh.c_str();
+    //tmpFile["base_mesh"] = m_savedData.m_baseMesh.c_str();
+    tmpFile["base_mesh"] = configs.s_generatedPath.string() + "sphere.obj";
 
     tmpFile["ref_mesh"] = m_savedData.m_refMesh.c_str();
 
@@ -62,9 +63,9 @@ namespace giAMRSDK {
 
     tmpFile["iter"] = m_savedData.m_iterations;
 
-    tmpFile["out_dir"] = m_savedData.m_outputDir.c_str();
+    tmpFile["out_dir"] = m_savedData.m_outputDir.make_preferred().c_str();
 
-    ofstream o(g_Configs().s_binPath.string()+"giAMR.json");
+    ofstream o(g_Configs().s_binPath.string() + "giAMR.json");
     o << std::setw(4) << tmpFile << ConsoleLine;
   }
   
@@ -74,11 +75,11 @@ namespace giAMRSDK {
     String tmpOut;
 
     tmpOut += "@echo off\n";
-    tmpOut += "call \"" + g_Configs().s_anacondaPath.string() + "\" activate dmodel\n";
+    tmpOut += "call \"" + g_Configs().s_anacondaPath.string() + "/activate.bat\" activate dmodel\n";
     tmpOut += "cd /d \"" + g_Configs().s_nvdiffmodPath.string()+ "\"\n";
-    tmpOut += "cmd /c \"python giAMR.py --config" + g_Configs().s_nvdiffmodPath.string() +" & exit\"\"";
+    tmpOut += "cmd /c \"python giAMR.py --config " + g_Configs().s_binPath.string() +"giAMR.json\"\"";
 
-    ofstream fout(g_Configs().s_binPath.string());
+    ofstream fout(g_Configs().s_binPath.string()+"giAMR.bat");
     fout << tmpOut;
   }
 
