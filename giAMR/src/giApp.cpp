@@ -10,9 +10,6 @@
  * @include
  */
 
-//#include <imgui_impl_dx11.cpp>
-//#include <imgui_impl_win32.cpp>
-
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -302,6 +299,11 @@ namespace giAMRSDK {
         ImGui::SameLine();
         if (ImGui::Button("Select", { 50, 20 })) {
           amr.setRefMesh(openFileDialog());
+          //Verify if is a fbx and transform to obj.
+          if (L".fbx" == amr.m_savedData.m_refMesh.extension()) {
+            Path tmpNewPath = Exporter::ExportAsObj(amr.m_savedData.m_refMesh, "obj");
+            amr.setRefMesh(tmpNewPath);
+          }
           createData(amr.m_savedData.m_refMesh);
           //Create data
           Path tmpPathData = amr.m_savedData.m_refMesh.string() + ".giData";
@@ -1129,5 +1131,5 @@ App::handleWindowEvent(HWND inHw,
   }
   }
 
-
+  return false;
 }

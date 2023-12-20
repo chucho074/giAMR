@@ -223,15 +223,15 @@ namespace giAMRSDK {
 
     int32 m_subdiv = 1;
 
-    uint32 m_width = 500;
-    uint32 m_height = 720;
+    float m_width = 500;
+    float m_height = 720;
     HWND m_hWnd = nullptr;
     void* m_window = nullptr;
 
 
     bool m_askAnaconda = false;
 
-    static inline const char* m_fileFilters = "obj files\0*.obj\0";
+    static inline const char* m_fileFilters = "obj files\0*.obj\0fbx files\0*.fbx\0";
 
     //Configs
 

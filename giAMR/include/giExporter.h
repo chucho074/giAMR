@@ -28,6 +28,8 @@ namespace giAMRSDK {
     static void
     ExportMtl(Path inPath);
 
+    static Path
+    ExportAsObj(Path inPath, String inFileType);
 
   };
 

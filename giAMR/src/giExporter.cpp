@@ -9,7 +9,14 @@
 /**
  * @include
  */
+
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/Exporter.hpp>      // C++ exporter interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>     // Post processing flags
+
 #include "giExporter.h"
+
 
 namespace giAMRSDK {
   
@@ -93,4 +100,17 @@ namespace giAMRSDK {
     foutMtl << tmpOutMtl;
   }
 
+  Path
+  Exporter::ExportAsObj(Path inPath, String inFileType) {
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(inPath.string(), 
+                                             aiProcess_Triangulate   
+                                             | aiProcess_FlipUVs);
+
+    //Export the model.
+    Assimp::Exporter exporter;
+    inPath.replace_extension(inFileType);
+    exporter.Export(scene, inFileType, inPath.string());
+    return inPath;
+  }
 }
