@@ -3,7 +3,7 @@
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    10/05/2023
- * @brief   A basic description of the what do the doc.
+ * @brief   The interface for the usage of Auto Model Redux.
  */
  
 /**
@@ -25,6 +25,18 @@ namespace giAMRSDK {
   void 
   AMR::run() {
     //Add a way to verify if there's info to use
+    int32 tmpIter = 1;
+    bool isCreated = false;
+    while (!isCreated) {
+      if(exists(m_savedData.m_outputDir.string() + "/(" + toString(tmpIter) + ")")) {
+        tmpIter++;
+      }
+      else {
+        m_savedData.m_outputDir = m_savedData.m_outputDir.string() + "/(" + toString(tmpIter) + ")";
+        create_directories(m_savedData.m_outputDir);
+        break;
+      }
+    }
     createJSON();
     createCommands();
     system("cmd /c start giAMR.bat");

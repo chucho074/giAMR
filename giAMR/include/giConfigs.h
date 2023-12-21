@@ -3,7 +3,7 @@
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    10/05/2023
- * @brief   The basic configurations for the project.
+ * @brief   The basic configurations for the app.
  */
  
 /**

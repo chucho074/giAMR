@@ -21,9 +21,6 @@ namespace giAMRSDK {
   	Importer() = default;
   	~Importer() = default;
   
-  
-  
-   private:
     /**
      * @brief    Reads the basic information of a model and returns it.
      */

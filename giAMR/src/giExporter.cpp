@@ -3,7 +3,7 @@
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    10/05/2023
- * @brief   A basic description of the what do the doc.
+ * @brief   An exporter for the data used.
  */
  
 /**

@@ -177,6 +177,10 @@ namespace giAMRSDK {
 
   using std::filesystem::exists;
 
+  using std::filesystem::create_directories;
+
+  using std::filesystem::create_directory;
+
   //Wstring & String converters functions
  /* String
   to_string(wString wstr) {

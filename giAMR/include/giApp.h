@@ -3,7 +3,7 @@
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    08/05/2023
- * @brief   A basic description of the what do the doc.
+ * @brief   A basic application.
  */
  
 /**
@@ -11,9 +11,6 @@
  */
 #pragma once
 
-#include <assimp/Importer.hpp>      // C++ importer interface
-#include <assimp/scene.h>           // Output data structure
-#include <assimp/postprocess.h>     // Post processing flags
 
 //Windows
 #include "windows.h"
@@ -51,7 +48,7 @@ namespace giAMRSDK {
     run();
 
     /**
-     * @brief    .
+     * @brief    Creates the data of the app.
      * @return   Returns a 0 if everything it's ok.
      */
     int32
@@ -142,25 +139,6 @@ namespace giAMRSDK {
     createData(Path inFile);
 
     /**
-     * @brief    Process the data of the model.
-     * @param    inInfo        The information structure to save data.
-     * @param    node          The node verify.
-     * @param    inScene       The assimp scene from the readed file.
-     */
-    void 
-    processData(ModelInfo & inInfo, 
-                aiNode * node, 
-                const aiScene * inScene);
-
-    /**
-     * @brief    Reads a model and get the information of it.
-     * @param    inFile        The path of the model.
-     * @param    inInfo        The info structure.
-     */
-    void
-    readBasicModel(Path inFile, ModelInfo& inInfo);
-
-    /**
      * @brief    Decode the data of the model.
      * @param    inFile        The path of the model.
      * @return   Returns the basic info of the model.
@@ -183,6 +161,12 @@ namespace giAMRSDK {
     createQuadSphere(int32 inSubdiv);
 
   private:
+
+    /**
+     * @brief    Validate if working path exist, otherwise, creates that path.
+     */
+    void
+    validatePaths();
 
     /**
      * @brief    Create a texture from a given Path.
@@ -228,6 +212,7 @@ namespace giAMRSDK {
     HWND m_hWnd = nullptr;
     void* m_window = nullptr;
 
+    static inline bool m_isOpen = false;
 
     bool m_askAnaconda = false;
 

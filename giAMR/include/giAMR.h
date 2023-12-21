@@ -3,7 +3,7 @@
  * @author  Jesus Alberto Del Moral Cupil
  * @e       idv18c.jmoral@uartesdigitales.edu.mx
  * @date    08/05/2023
- * @brief   A basic description of the what do the doc.
+ * @brief   The interface for the usage of Auto Model Redux.
  */
  
 /**

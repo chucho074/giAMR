@@ -23,6 +23,7 @@
 #include "giAMR.h"
 #include "giTexture.h"
 #include "giExporter.h"
+#include "giImporter.h"
 
 #include <cmath>
 #include <shlobj_core.h>
@@ -36,6 +37,10 @@ using namespace giAMRSDK;
 using namespace ImGui;
 using namespace pmp;
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,
+                                                             UINT msg,
+                                                             WPARAM wParam,
+                                                             LPARAM lParam);
 namespace giAMRSDK {
 
 #define MIN_SPHERE_SECTOR 3
@@ -69,9 +74,16 @@ namespace giAMRSDK {
       m_askAnaconda = true;
     }
 
+    //Validate if the paths asigned exists.
+    validatePaths();
+
     //App Loop.
     MSG msg = { 0 };
-    while (WM_QUIT != msg.message) {
+    m_isOpen = true;
+
+    while (m_isOpen) {
+
+      //GetMessage(&msg, NULL, 0, 0);
       if (PeekMessage(&msg, m_hWnd, 0, 0, PM_REMOVE)) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
@@ -79,7 +91,7 @@ namespace giAMRSDK {
         //Own events.
         onEvent();
       }
-      else {
+      else { 
         //Update Time
         static float t = 0.0f;
         static int64 dwTimeStart = 0;
@@ -88,14 +100,13 @@ namespace giAMRSDK {
           dwTimeStart = dwTimeCur;
         }
         t = (dwTimeCur - dwTimeStart) / 1000.0f;
-        //Update Game Logic.
+        //Update App Logic.
         onUpdate(t);
 
         //Render Frame
         onRender();
       }
     }
-
 
     //Destroy the resources
     onDestroy();
@@ -298,6 +309,14 @@ namespace giAMRSDK {
         ImGui::Text(amr.m_savedData.m_refMesh.filename().string().c_str());
         ImGui::SameLine();
         if (ImGui::Button("Select", { 50, 20 })) {
+          //Clear prev info
+          amr.m_outInfo = ModelInfo();
+          amr.m_savedData.m_outputDir.clear();
+          amr.m_AMRprocess.clear();
+          amr.m_processImg = 0;
+          amr.m_showingImg = 1;
+          
+          //Set the new info of the reference mesh
           amr.setRefMesh(openFileDialog());
           //Verify if is a fbx and transform to obj.
           if (L".fbx" == amr.m_savedData.m_refMesh.extension()) {
@@ -310,14 +329,15 @@ namespace giAMRSDK {
           amr.m_refInfo = decodeData(tmpPathData);
           
           if (amr.minimunTriang < amr.m_refInfo.totalTriangles) {
-            amr.minimunTriang = amr.m_refInfo.totalTriangles * 0.25f;
+            amr.minimunTriang = static_cast<uint32>(amr.m_refInfo.totalTriangles * 0.25);
 
-            amr.halfTriang = amr.m_refInfo.totalTriangles * 0.50f;
+            amr.halfTriang = static_cast<uint32>(amr.m_refInfo.totalTriangles * 0.50);
 
-            amr.partialTriang = amr.m_refInfo.totalTriangles * 0.75f;
+            amr.partialTriang = static_cast<uint32>(amr.m_refInfo.totalTriangles * 0.75);
 
             amr.finalTriang = amr.minimunTriang;
           }
+          
         }
         ImGui::SameLine();
 
@@ -340,7 +360,7 @@ namespace giAMRSDK {
         ImGui::Separator();
 
         //Learning rate
-        ImGui::SliderFloat("Learning Rate", &amr.m_savedData.m_learningRate, 0.003, 0.10);
+        ImGui::SliderFloat("Learning Rate", &amr.m_savedData.m_learningRate, 0.003f, 0.10f);
 
         ImGui::Separator();
 
@@ -423,8 +443,6 @@ namespace giAMRSDK {
       }
       renderAMRprocess();
 
-
-
       ImGui::End();
     }
 
@@ -475,7 +493,7 @@ namespace giAMRSDK {
       return 1;
     }
 
-    RECT rc = { 0, 0, m_width, m_height };
+    RECT rc = { 0, 0, static_cast<LONG>(m_width), static_cast<LONG>(m_height) };
     AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
     m_hWnd = CreateWindow(L"giAMR",
@@ -498,8 +516,8 @@ namespace giAMRSDK {
 
     RECT clientRect;
     GetClientRect(m_hWnd, &clientRect);
-    m_width = clientRect.right - clientRect.left;
-    m_height = clientRect.bottom - clientRect.top;
+    m_width = static_cast<float>(clientRect.right - clientRect.left);
+    m_height = static_cast<float>(clientRect.bottom - clientRect.top);
     m_window = reinterpret_cast<void*>(m_hWnd);
 
     return 0;
@@ -591,11 +609,9 @@ namespace giAMRSDK {
         ImGui::TableNextColumn();
 
         //Read every new image, if exist any new, load it and present it.
-        SharedPtr<Texture> tmpTexture;
         String tmpImgName = ("/img" + toString(amr.m_processImg) + ".png");
         String tmpNextImgName = ("/img" + toString(amr.m_processImg + 1) + ".png");
         //The path for the actual image
-        //String tmpOut = amr.m_savedData.m_outputDir.parent_path().string() + "/" + amr.m_savedData.m_outputDir.stem().string();
         String tmpOut = amr.m_savedData.m_outputDir.string();
         Path tmpImgPath = tmpOut + tmpImgName;
         //Path for the next image
@@ -609,13 +625,10 @@ namespace giAMRSDK {
         }
 
         if (!amr.m_AMRprocess.empty()) {
-          if (nullptr != amr.m_AMRprocess.at(amr.m_showingImg - 1)->m_texture) {
-            tmpTexture = static_pointer_cast<Texture>(amr.m_AMRprocess.at(amr.m_showingImg-1));
-            //tmpTexture = make_shared<Texture>(amr.m_AMRprocess.at(amr.m_showingImg - 1));
-            if (nullptr != tmpTexture->m_texture) {
-              ImGui::Image(tmpTexture->m_subResourceData, { ImGui::GetWindowContentRegionMax().x / 1,
-                                                    ImGui::GetWindowContentRegionMax().y / 2 });
-            }
+          if (nullptr != amr.m_AMRprocess.at(amr.m_showingImg-1)->m_texture) {
+            ImGui::Image(amr.m_AMRprocess.at(amr.m_showingImg-1)->m_subResourceData, { ImGui::GetWindowContentRegionMax().x / 1,
+                                                                                     ImGui::GetWindowContentRegionMax().y / 2 });
+            
           }
         }
         ImGui::SliderInt("", &amr.m_showingImg, 1, amr.m_processImg);
@@ -672,7 +685,7 @@ namespace giAMRSDK {
 
     //Search for data.
     ModelInfo tmpData; 
-    readBasicModel(inFile, tmpData);
+    Importer::readBasicModel(inFile, tmpData);
 
     //Triangles data
     tmpOut << YAML::Key << "Triangles";
@@ -704,53 +717,6 @@ namespace giAMRSDK {
     ofstream fout(inFile.string()+ ".giData");
     fout << tmpOut.c_str();
 
-  }
-
-  void
-  App::processData(ModelInfo& inInfo, 
-                   aiNode* node,
-                   const aiScene* inScene) {
-    for (uint32 i = 0; i < node->mNumMeshes; ++i) {
-      aiMesh* mesh = inScene->mMeshes[node->mMeshes[i]];
-      inInfo.totalVertices += mesh->mNumVertices;
-      inInfo.totalFaces += mesh->mNumFaces;
-      for (uint32 j = 0; j < mesh->mNumFaces; ++j) {
-        aiFace face = mesh->mFaces[j];
-        inInfo.totalIndex += face.mNumIndices;
-      }
-    }
-    // then do the same for each of its children
-    for (uint32 i = 0; i < node->mNumChildren; i++) {
-      processData(inInfo, node->mChildren[i], inScene);
-    }
-  }
-
-
-  void
-  App::readBasicModel(Path inFile, ModelInfo& inInfo) {
-    Assimp::Importer importer;
-
-    importer.ReadFile(inFile.string(),
-                      aiProcessPreset_TargetRealtime_MaxQuality |
-                      aiProcess_TransformUVCoords |
-                      aiProcess_ConvertToLeftHanded |
-                      aiProcess_Triangulate);
-
-    const aiScene* tmpScene = importer.GetOrphanedScene();
-
-    if (!tmpScene
-      || tmpScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE
-      || !tmpScene->mRootNode) {
-      //g_logger().SetError(ERROR_TYPE::kModelLoading, "Failed to load a model");
-    }
-
-    inInfo.totalMeshes = tmpScene->mRootNode->mNumMeshes;
-    inInfo.totalAnimations = tmpScene->mNumAnimations;
-    inInfo.totalMaterials = tmpScene->mNumMaterials;
-
-    processData(inInfo, tmpScene->mRootNode, tmpScene);
-
-    inInfo.totalTriangles = inInfo.totalIndex / 3;
   }
 
   ModelInfo 
@@ -802,8 +768,8 @@ namespace giAMRSDK {
 
     uint32 stacks = ((numTriangles) / sectors) / 2;
 
-    uint32 sphereSectors = sectors < MIN_SPHERE_SECTOR ? MIN_SPHERE_SECTOR : sectors;
-    uint32 sphereStacks = stacks < MIN_SPHERE_STACK ? MIN_SPHERE_STACK : stacks;
+    int32 sphereSectors = sectors < MIN_SPHERE_SECTOR ? MIN_SPHERE_SECTOR : sectors;
+    int32 sphereStacks = stacks < MIN_SPHERE_STACK ? MIN_SPHERE_STACK : stacks;
 
     float x, y, z;
     float nx, ny, nz, lengthInv = 1.0f / radius;
@@ -816,8 +782,8 @@ namespace giAMRSDK {
     SimpleVertex vertex;
     vertex.Tang = Vector3(1.0f, 1.0f, 1.0f);
     vertex.BiNor = Vector3(1.0f, 1.0f, 1.0f);
-
-    sphereVertices.resize((sphereSectors * (sphereStacks - 1)) + 2);
+    int32 size = (sphereSectors * (sphereStacks - 1)) + 2;
+    sphereVertices.resize(size);
     int32 tmpIter = 0;
     ++tmpIter;
 
@@ -829,10 +795,10 @@ namespace giAMRSDK {
     sphereVertices[0] = tmpVertex;
 
     //Vertices
-    for (uint32 i = 0; i < sphereStacks - 1; ++i) {
-      float phi = PI * double(i + 1) / double(sphereStacks);
-      for (uint32 j = 0; j < sphereSectors; ++j) {
-        sectorAngle = 2.0 * PI * double(j) / double(sphereSectors);
+    for (int32 i = 0; i < sphereStacks - 1; ++i) {
+      float phi = PI * float(i + 1) / float(sphereStacks);
+      for (int32 j = 0; j < sphereSectors; ++j) {
+        sectorAngle = 2.0f * PI * float(j) / float(sphereSectors);
 
         //Vertex
         x = std::sin(phi) * std::cos(sectorAngle);
@@ -951,6 +917,20 @@ namespace giAMRSDK {
 
     pmp::write_giAMR(tmpPMPMesh, tmpPath, tmpFlags);
     Exporter::ExportMtl(tmpPath);
+  }
+
+  void 
+  App::validatePaths() {
+    auto& configs = g_Configs();
+
+    /*if(!exists(configs.s_binPath)) {
+      create_directory(configs.s_binPath);
+    }*/
+
+    if (!exists(configs.s_generatedPath)) {
+      create_directories(configs.s_generatedPath);
+    }
+
   }
 
   SharedPtr<Texture>
@@ -1092,44 +1072,38 @@ namespace giAMRSDK {
     return Path();
   }
 
-
-
-}
-
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,
-                                                             UINT msg,
-                                                             WPARAM wParam,
-                                                             LPARAM lParam);
-
-LRESULT
-App::handleWindowEvent(HWND inHw,
-  UINT inMsg,
-  WPARAM inwParam,
-  LPARAM inlParam) {
-
-  if (ImGui_ImplWin32_WndProcHandler(inHw, inMsg, inwParam, inlParam))
-    return true;
-
-  PAINTSTRUCT ps;
-  HDC hdc;
-  switch (inMsg) {
-  case WM_PAINT: {
-    hdc = BeginPaint(inHw, &ps);
-    EndPaint(inHw, &ps);
-    break;
-  }
-  case WM_DESTROY: {
-    PostQuitMessage(0);
-    break;
-  }
-
-
-  default: {
-
-    return DefWindowProc(inHw, inMsg, inwParam, inlParam);
-    break;
-  }
+  LRESULT
+  App::handleWindowEvent(HWND inHw,
+                         UINT inMsg,
+                         WPARAM inwParam,
+                         LPARAM inlParam) {
+  
+    if (ImGui_ImplWin32_WndProcHandler(inHw, inMsg, inwParam, inlParam)) {
+      return true;
+    }
+  
+    PAINTSTRUCT ps;
+    HDC hdc;
+    switch (inMsg) {
+      case WM_PAINT: {
+        hdc = BeginPaint(inHw, &ps);
+        EndPaint(inHw, &ps);
+        break;
+      }
+  
+      case WM_CLOSE: {
+        PostQuitMessage(0);
+        m_isOpen = false;
+        break;
+      }
+      
+      default: {
+        return DefWindowProc(inHw, inMsg, inwParam, inlParam);
+        break;
+      }
+    }
+  
+    return false;
   }
 
-  return false;
 }

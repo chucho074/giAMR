@@ -143,7 +143,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>./include/;$(DEVLIBS)/stb/;$(DEVLIBS)/Assimp/include;$(DEVLIBS)/ImGui/;$(DEVLIBS)/ImguiSamples/;$(DEVLIBS)/JSON/include;$(DEVLIBS)/pmp/include;$(DEVLIBS)/eigen-3.4.0;$(DEVLIBS)/yaml/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -162,6 +162,7 @@
     <ClCompile Include="src\giApp.cpp" />
     <ClCompile Include="src\giConfigs.cpp" />
     <ClCompile Include="src\giExporter.cpp" />
+    <ClCompile Include="src\giImporter.cpp" />
     <ClCompile Include="src\giMesh.cpp" />
     <ClCompile Include="src\giVector2.cpp" />
     <ClCompile Include="src\giVector3.cpp" />

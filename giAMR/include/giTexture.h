@@ -37,7 +37,10 @@ namespace giAMRSDK {
   public:
     Texture() = default;
 
-    ~Texture() = default;
+    ~Texture() {
+      SAFE_RELEASE(m_texture);
+      SAFE_RELEASE(m_subResourceData);
+    }
 
     //The name of the Texture.
     String m_name;
